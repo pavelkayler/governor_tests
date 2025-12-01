@@ -6,6 +6,9 @@ const ContextProvider = ({ children }) => {
   const [wallet, setWallet] = useState(null);
   const [proposals, setProposals] = useState([]);
   const [balances, setBalances] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
+
+  const [successfullProposes, setSuccessfullProposes] = useState([]);
 
   const connectWallet = async () => {
     await GovernorServices.connectWallet().then((data) => setWallet(data));
@@ -29,6 +32,12 @@ const ContextProvider = ({ children }) => {
 
   const viewState = async (proposalId) => {
     return await GovernorServices.state(proposalId);
+  };
+
+  const viewUserInfo = async () => {
+    await GovernorServices.viewUserInfo().then(async (data) => {
+      setUserInfo(data);
+    });
   };
 
   const getBalances = async () => {
@@ -57,6 +66,10 @@ const ContextProvider = ({ children }) => {
     await GovernorServices.cancel(proposalId);
   };
 
+  const myExecute = async (proposalId) => {
+    await GovernorServices.myExecute(proposalId);
+  };
+
   const values = {
     connectWallet,
     disconnectWallet,
@@ -64,8 +77,12 @@ const ContextProvider = ({ children }) => {
     setWallet,
     proposals,
     getAllProposalIds,
+    successfullProposes,
+    setSuccessfullProposes,
     balances,
     getBalances,
+    userInfo,
+    viewUserInfo,
     viewProposal,
     viewState,
     create_A_of_B_propose,
@@ -73,6 +90,7 @@ const ContextProvider = ({ children }) => {
     create_E_or_F_propose,
     myCastVote,
     cancel,
+    myExecute,
   };
 
   return <Context.Provider value={values}>{children}</Context.Provider>;

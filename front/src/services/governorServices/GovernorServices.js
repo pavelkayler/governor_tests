@@ -2,7 +2,7 @@ import abi from "./abi.json";
 import { ethers } from "ethers";
 
 class GovernorServices {
-  contractAddress = "0x9F47649EAc9513B76957946bA9c1E929DDA330cC";
+  contractAddress = "0x880EC53Af800b5Cd051531672EF4fc4De233bD5d";
   rpcProvider;
   reader;
   provider;
@@ -65,9 +65,17 @@ class GovernorServices {
 
   async viewMyBalances() {
     !this.writer && (await this.connectWallet());
-
     try {
       return await this.writer.viewMyBalances();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async viewUserInfo() {
+    !this.writer && (await this.connectWallet());
+    try {
+      return await this.writer.viewUserInfo();
     } catch (error) {
       console.error(error);
     }
@@ -119,6 +127,16 @@ class GovernorServices {
 
     try {
       return await this.writer.cancel(proposalId);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async myExecute(proposalId) {
+    !this.writer && (await this.connectWallet());
+
+    try {
+      return await this.writer.myExecute(proposalId);
     } catch (error) {
       console.error(error);
     }

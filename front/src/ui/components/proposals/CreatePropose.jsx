@@ -8,7 +8,6 @@ const CreatePropose = () => {
 
   const handleSelect = (e) => {
     setSelected(e.target.value);
-    // console.log(e.target.value);
   };
 
   const handleCreate = async (e) => {
@@ -16,15 +15,12 @@ const CreatePropose = () => {
     switch (selected) {
       case "Инвестирование":
         await create_A_of_B_propose(e.target[1].value, e.target[2].value, e.target[3].value * 12);
-        // console.log(e.target[1].value, e.target[2].value, e.target[3].value * 12);
         break;
       case "Добавить/удалить участника DAO":
         await create_C_or_D_propose(e.target[1].value, e.target[2].checked, e.target[3].checked, e.target[4].value * 12);
-        // console.log(e.target[1].value, e.target[2].checked, e.target[3].checked, e.target[4].value * 12);
         break;
       case "Управление токенами":
         await create_E_or_F_propose(e.target[1].checked, e.target[2].checked, e.target[3].value * 1, e.target[4].value * 12);
-        // console.log(e.target[1].checked, e.target[2].checked, e.target[3].value * 1, e.target[4].value * 12);
         break;
     }
   };

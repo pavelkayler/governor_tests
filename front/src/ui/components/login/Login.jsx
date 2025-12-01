@@ -1,4 +1,4 @@
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Form, FormCheck, FormControl, FormGroup } from "react-bootstrap";
 import GovernorServices from "../../../services/governorServices/GovernorServices.js";
 import { useContext } from "react";
 import { Context } from "../../../core/context/Context.jsx";
@@ -8,6 +8,11 @@ const Login = () => {
 
   const handleLogin = async () => {
     await connectWallet();
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    console.log(e.target[0].value, e.target[1].value);
   };
 
   return (
@@ -23,6 +28,15 @@ const Login = () => {
           <b>Вы авторизированы!</b>
         </div>
       )}
+      <Form onSubmit={handleClick}>
+        <FormGroup>
+          <FormControl type="text" placeholder="jopa" />
+        </FormGroup>
+        <FormGroup>
+          <FormCheck type="switch" label={"adasdasd"} />
+        </FormGroup>
+        <Button type="submit">click</Button>
+      </Form>
     </div>
   );
 };

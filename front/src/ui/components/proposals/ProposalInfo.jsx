@@ -6,7 +6,7 @@ const ProposalInfo = ({ proposalId }) => {
   const [proposal, setProposal] = useState({});
   const [state, setState] = useState({});
 
-  const { viewProposal, viewState } = useContext(Context);
+  const { viewProposal, viewState, successfullProposes, setSuccessfullProposes } = useContext(Context);
 
   useEffect(() => {
     (async () => {
@@ -17,6 +17,7 @@ const ProposalInfo = ({ proposalId }) => {
         setState(data);
       });
       // await setVoters(proposal.voters);
+      setSuccessfullProposes(...successfullProposes, successfullProposes);
     })();
   }, [proposal]);
 
