@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button, Nav, Navbar } from "react-bootstrap";
 import { useContext } from "react";
 import { Context } from "../../../core/context/Context.jsx";
+import { Balance } from "../balance/Balance.jsx";
 
 const Header = () => {
   const { wallet, disconnectWallet } = useContext(Context);
@@ -27,18 +28,23 @@ const Header = () => {
               </h1>
             </Nav>
             {wallet && (
-              <Nav>
-                <Link to="/proposals">Все предложения</Link>
-              </Nav>
+              <>
+                <Nav>
+                  <Link to="/proposals">Все предложения</Link>
+                </Nav>
+                <Nav>
+                  <Link to="/log">Журнал принятых решений</Link>
+                </Nav>
+              </>
             )}
           </Navbar>
         </div>
         {wallet && (
-          <div className="d-flex flex-column justify-content-center align-content-center text-center w-50">
-            <Button variant="outline-dark" onClick={handleExit}>
+          <div className="d-flex flex-column justify-content-center align-content-center text-center w-100">
+            <Button variant="outline-dark" onClick={handleExit} className="d-flex justify-content-center align-self-center w-50">
               Выйти
             </Button>
-            <p className="text-success">ваш кошелек: {wallet}</p>
+            <Balance />
           </div>
         )}
       </div>
