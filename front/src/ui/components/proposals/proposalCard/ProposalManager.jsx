@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 import { useContext } from "react";
-import { Context } from "../../../core/context/Context.jsx";
+import { Context } from "../../../../core/context/Context.jsx";
 
 const ProposalManager = ({ proposalId }) => {
   const { cancel, myExecute } = useContext(Context);

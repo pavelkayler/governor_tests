@@ -1,5 +1,5 @@
-import { CreatePropose } from "./CreatePropose.jsx";
-import { ProposalCard } from "./ProposalCard.jsx";
+import { CreatePropose } from "./proposalCard/CreatePropose.jsx";
+import { ProposalCard } from "./proposalCard/ProposalCard.jsx";
 import { useContext, useEffect } from "react";
 import { Context } from "../../../core/context/Context.jsx";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,6 @@ const Proposals = () => {
 
   useEffect(() => {
     (async () => {
-      wallet === null && navigate("/");
       await getAllProposalIds();
     })();
   }, [proposals]);

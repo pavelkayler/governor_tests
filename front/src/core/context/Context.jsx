@@ -30,6 +30,24 @@ const ContextProvider = ({ children }) => {
     return await GovernorServices.viewProposal(proposalId);
   };
 
+  const loadSuccessfullProposals = async () => {
+    const ids = await GovernorServices.getAllProposalIds();
+
+    const result = [];
+    for (const id of ids) {
+      const [proposalData, stateData] = await Promise.all([GovernorServices.viewProposal(id), GovernorServices.state(id)]);
+
+      if (Number(stateData) === 7) {
+        result.push({
+          id,
+          proposal: proposalData,
+          state: Number(stateData),
+        });
+      }
+    }
+    setSuccessfullProposes(result);
+  };
+
   const viewState = async (proposalId) => {
     return await GovernorServices.state(proposalId);
   };
@@ -78,7 +96,7 @@ const ContextProvider = ({ children }) => {
     proposals,
     getAllProposalIds,
     successfullProposes,
-    setSuccessfullProposes,
+    loadSuccessfullProposals,
     balances,
     getBalances,
     userInfo,

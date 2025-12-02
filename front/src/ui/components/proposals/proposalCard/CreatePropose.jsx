@@ -1,6 +1,7 @@
 import { Button, Card, Form, FormCheck, FormControl, FormGroup, FormLabel, FormSelect } from "react-bootstrap";
 import { useContext, useState } from "react";
-import { Context } from "../../../core/context/Context.jsx";
+import { Context } from "../../../../core/context/Context.jsx";
+import { fc, fg } from "../../../utils/Utils.jsx";
 
 const CreatePropose = () => {
   const [selected, setSelected] = useState("");
@@ -20,6 +21,7 @@ const CreatePropose = () => {
         await create_C_or_D_propose(e.target[1].value, e.target[2].checked, e.target[3].checked, e.target[4].value * 12);
         break;
       case "Управление токенами":
+        console.log(e.target[1].checked, e.target[2].checked, e.target[3].value * 1, e.target[4].value * 12);
         await create_E_or_F_propose(e.target[1].checked, e.target[2].checked, e.target[3].value * 1, e.target[4].value * 12);
         break;
     }
@@ -42,59 +44,27 @@ const CreatePropose = () => {
           <FormLabel column="lg">{selected}</FormLabel>
           {selected === "Инвестирование" && (
             <>
-              <FormGroup>
-                {/*1*/}
-                <FormLabel column={"sm"}>Адрес стартапа</FormLabel>
-                <FormControl required type="text" defaultValue="0x5B38Da6a701c568545dCfcB03FcB875f56beddC4" />
-              </FormGroup>
-              <FormGroup>
-                {/*2*/}
-                <FormLabel column={"sm"}>Сколько инвестировать (в ether)</FormLabel>
-                <FormControl required type="number" defaultValue="10000" placeholder="ETH" />
-              </FormGroup>
+              {fg("Адрес стартапа", "text", "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", "address")}
+              {fg("Сколько инвестировать (в ether)", "number", "10000", "ETH")}
             </>
           )}
           {selected === "Добавить/удалить участника DAO" && (
             <>
-              <FormGroup>
-                {/*3*/}
-                <FormLabel column={"sm"}>Адрес пользователя</FormLabel>
-                <FormControl required type="text" defaultValue="0x5B38Da6a701c568545dCfcB03FcB875f56beddC4" />
-              </FormGroup>
-              <FormGroup>
-                {/*4*/}
-                <FormCheck type="checkbox" label="Простое большинство?" defaultChecked={true} />
-              </FormGroup>
-              <FormGroup>
-                {/*5*/}
-                <FormCheck type={"checkbox"} label="Добавить пользователя?" defaultChecked={true} />
-              </FormGroup>
+              {fg("Адрес пользователя", "text", "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", "")}
+              {fc("Простое большинство?", true)}
+              {fc("Добавить пользователя?", true)}
             </>
           )}
           {selected === "Управление токенами" && (
             <>
-              <FormGroup>
-                {/*6*/}
-                <FormCheck type="checkbox" label="Простое большинство?" defaultChecked={true} />
-              </FormGroup>
-              <FormGroup>
-                {/*7*/}
-                <FormCheck type="checkbox" label="Системный токен?" defaultChecked={false} />
-              </FormGroup>
-              <FormGroup>
-                {/*8*/}
-                <FormLabel column={"sm"}>Новый делитель</FormLabel>
-                <FormControl required type="number" defaultValue="12" />
-              </FormGroup>
+              {fc("Простое большинство?", true)}
+              {fc("Системный токен?", false)}
+              {fg("Новый делитель", "number", "12", "6 now")}
             </>
           )}
           {selected && (
             <>
-              <FormGroup>
-                {/*9*/}
-                <FormLabel column={"sm"}>Время для голосования (в минутах)</FormLabel>
-                <FormControl required type="number" defaultValue="5" placeholder="minutes" />
-              </FormGroup>
+              {fg("Время для голосования (в минутах)", "number", "5", "minutes")}
               <Button type="submit">Создать предложение</Button>
             </>
           )}

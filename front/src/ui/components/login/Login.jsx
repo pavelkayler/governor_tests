@@ -1,5 +1,4 @@
 import { Button, Card, Form, FormCheck, FormControl, FormGroup } from "react-bootstrap";
-import GovernorServices from "../../../services/governorServices/GovernorServices.js";
 import { useContext } from "react";
 import { Context } from "../../../core/context/Context.jsx";
 
@@ -28,15 +27,6 @@ const Login = () => {
           <b>Вы авторизированы!</b>
         </div>
       )}
-      <Form onSubmit={handleClick}>
-        <FormGroup>
-          <FormControl type="text" placeholder="jopa" />
-        </FormGroup>
-        <FormGroup>
-          <FormCheck type="switch" label={"adasdasd"} />
-        </FormGroup>
-        <Button type="submit">click</Button>
-      </Form>
     </div>
   );
 };

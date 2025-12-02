@@ -1,14 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Nav, Navbar } from "react-bootstrap";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../../../core/context/Context.jsx";
 import { Balance } from "../balance/Balance.jsx";
 
 const Header = () => {
   const { wallet, disconnectWallet } = useContext(Context);
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (!wallet) {
+      nav("/");
+    }
+  }, []);
 
   const handleExit = () => {
     disconnectWallet();
+    nav("/");
   };
 
   return (

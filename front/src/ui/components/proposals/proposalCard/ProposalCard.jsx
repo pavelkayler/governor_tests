@@ -9,7 +9,6 @@ const ProposalCard = ({ proposalId }) => {
       <CardBody>
         <ProposalInfo proposalId={proposalId} />
         <ProposalVoting proposalId={proposalId} />
-        <ProposalManager proposalId={proposalId} />
       </CardBody>
     </Card>
   );

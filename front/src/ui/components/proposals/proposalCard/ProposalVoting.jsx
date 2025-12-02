@@ -1,6 +1,6 @@
 import { Button, Form, FormCheck, FormControl, FormGroup } from "react-bootstrap";
 import { useContext } from "react";
-import { Context } from "../../../core/context/Context.jsx";
+import { Context } from "../../../../core/context/Context.jsx";
 
 const ProposalVoting = ({ proposalId }) => {
   const { myCastVote } = useContext(Context);
