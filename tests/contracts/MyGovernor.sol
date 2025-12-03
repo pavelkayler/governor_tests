@@ -13,7 +13,7 @@ contract MyGovernor is
     WrapToken wrap;
     uint systemDen = 3;
     uint wrapDen = 6;
-    uint32 period = 5; // 5 блоков
+    uint32 period;
     address[] users;
     uint[] allProposals;
 
@@ -39,10 +39,16 @@ contract MyGovernor is
     }
 
     struct ProposalInfo {
+        uint proposalId;
+        uint proposalState;
+        address proposer;
         address target;
         uint value;
         bytes[] calldatas;
         string description;
+        address changeHim;
+        bool changeSystem;
+        uint newDenominator;
         proposalType typ;
         bool simpleMost;
         uint period;
@@ -125,6 +131,8 @@ contract MyGovernor is
         period = _period;
 
         uint id = super.propose(targets, values, calldatas, description);
+        proposals[id].proposalId = id;
+        proposals[id].proposer = tx.origin;
         proposals[id].target = target;
         proposals[id].value = value;
         proposals[id].calldatas = calldatas;
@@ -258,7 +266,7 @@ contract MyGovernor is
             target,
             value,
             "",
-            "investing to startup",
+            "investing",
             _period
         );
         target.balance == 0
@@ -279,10 +287,18 @@ contract MyGovernor is
             adding
         );
         uint id = servicePropose(address(this), 0, calldat, "setDao", _period);
-        adding == true
-            ? proposals[id].typ = proposalType.c
-            : proposals[id].typ = proposalType.d;
+
+        if (adding == true) {
+            require(user[_user].role == roles.user, "he's already dao");
+            proposals[id].typ = proposalType.c;
+            
+            } else {
+            require(user[_user].role == roles.dao, "he's not dao");
+            proposals[id].typ = proposalType.d;
+            }
+
         proposals[id].simpleMost = simpleMost;
+        proposals[id].changeHim = _user;
         return id;
     }
 
@@ -302,13 +318,16 @@ contract MyGovernor is
             ? proposals[id].typ = proposalType.e
             : proposals[id].typ = proposalType.f;
         proposals[id].simpleMost = simpleMost;
+        proposals[id].changeSystem = _system;
+        proposals[id].newDenominator = _newDenominator;
         return id;
     }
 
     function buyWrapToken() public payable {
-        uint value = msg.value / wrap.price();
+        uint value = (msg.value / wrap.price()) * 10 ** wrap.decimals();
         wrap.transferFrom(address(this), msg.sender, value);
         user[msg.sender].wrap = value;
+        
     }
 
     function delegateWrapToken(
@@ -335,10 +354,8 @@ contract MyGovernor is
 
     function changeRole(address _user, bool adding) public onlyGovernor {
         if (adding == true) {
-            require(user[_user].role != roles.dao, "already dao");
             user[_user].role = roles.dao;
         } else {
-            require(user[_user].role != roles.user, "already user");
             user[_user].role = roles.user;
         }
     }
@@ -365,12 +382,11 @@ contract MyGovernor is
         return allInfo;
     }
 
-    function viewMyBalances() public view returns (uint[4] memory allBalances) {
+    function viewMyBalances() public view returns (uint[3] memory allBalances) {
         allBalances = [
+            msg.sender.balance,
             system.balanceOf(msg.sender),
-            wrap.balanceOf(msg.sender),
-            user[msg.sender].system,
-            user[msg.sender].wrap
+            wrap.balanceOf(msg.sender)
         ];
     }
 
@@ -382,6 +398,10 @@ contract MyGovernor is
 
     function getProposalId(uint index) public view returns (uint) {
         return proposalNumber[index];
+    }
+
+    function getAllProposalIds() public view returns (uint[] memory) {
+        return allProposals;
     }
 
     // ------------- end view functions ------------- //
