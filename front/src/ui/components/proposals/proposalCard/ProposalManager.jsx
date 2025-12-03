@@ -1,9 +1,9 @@
-import { Button } from "react-bootstrap";
 import { useContext } from "react";
 import { Context } from "../../../../core/context/Context.jsx";
+import { Button, Form, FormCheck, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
 const ProposalManager = ({ proposalId }) => {
-  const { cancel, myExecute } = useContext(Context);
+  const { myExecute, cancel } = useContext(Context);
 
   const handleCancel = async (e) => {
     e.preventDefault();
@@ -16,14 +16,14 @@ const ProposalManager = ({ proposalId }) => {
   };
 
   return (
-    <div className="d-flex  flex-row flex-wrap justify-content-center">
-      <Button onClick={handleExecute} className="btn-secondary m-2">
-        Execute
+    <>
+      <Button variant="outline-danger" onClick={handleCancel}>
+        Отменить голосование
       </Button>
-      <Button onClick={handleCancel} className="btn-secondary m-2">
-        Отменить
+      <Button variant="outline-success" onClick={handleExecute}>
+        Применить предложение
       </Button>
-    </div>
+    </>
   );
 };
 

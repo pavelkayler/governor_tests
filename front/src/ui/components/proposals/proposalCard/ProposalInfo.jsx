@@ -1,55 +1,41 @@
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../../../../core/context/Context.jsx";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { getQuorumType, proposalState, proposalType } from "../../../../core/data/structures.js";
-import { ProposalManager } from "./ProposalManager.jsx";
+import "../../../utils/enums.js";
+import { proposalType, quorumType, token, viewState } from "../../../utils/enums.js";
 
 const ProposalInfo = ({ proposalId }) => {
-  const [proposal, setProposal] = useState({});
-  const [state, setState] = useState({});
-  const [proposer, setProposer] = useState("");
-
-  const { wallet, viewProposal, viewState } = useContext(Context);
+  const { viewProposal, getState } = useContext(Context);
+  const [proposal, setProposal] = useState([]);
+  const [state, setState] = useState();
 
   useEffect(() => {
     (async () => {
-      const [proposalData, stateData] = await Promise.all([viewProposal(proposalId), viewState(proposalId)]);
-      setProposal(proposalData);
-      setState(stateData);
-      setProposer(proposal.proposer?.toString());
+      await viewProposal(proposalId).then((data) => setProposal(data));
+      await getState(proposalId).then((data) => setState(data));
     })();
-  }, [proposalId, state]);
-
-  const getProposer = () => {
-    return { proposer };
-  };
+  }, [viewProposal, getState, state, proposal]);
 
   return (
-    <>
-      <ListGroup>
-        <ListGroupItem>
-          <h5>Предложение: {proposal.description?.toString() || ""}</h5>
-        </ListGroupItem>
-        <ListGroupItem>Состояние голосования: {proposalState(state)}</ListGroupItem>
-        <ListGroupItem>Инициатор голосования: {proposer || ""}</ListGroupItem>
-        {proposal.description?.toString() === "investing" && (
-          <>
-            <ListGroupItem>Куда вложить: {proposal.target?.toString() || ""}</ListGroupItem>
-            <ListGroupItem>Сколько вложить: {proposal.value?.toString() || ""} ETHER</ListGroupItem>
-          </>
-        )}
-        {proposal.description?.toString() === "setDao" && <ListGroupItem>Изменить права: {proposal.changeHim?.toString() || ""}</ListGroupItem>}
-        <ListGroupItem>Тип предложения: {proposalType(proposal.typ?.toString()) || ""}</ListGroupItem>
-        <ListGroupItem>Тип достижения кворума: {getQuorumType(proposal.typ?.toString(), proposal.simpleMost?.toString())}</ListGroupItem>
-        <ListGroupItem>Время голосования: {proposal.period?.toString() / 12 || ""} минут</ListGroupItem>
-        <ListGroupItem className="voters">
-          Проголосовавшие: <p>{proposal.voters?.toString().replaceAll(",", "\n")}</p>
-        </ListGroupItem>
-        <ListGroupItem>За: {proposal.votesFor?.toString() || ""}</ListGroupItem>
-        <ListGroupItem>Против: {proposal.votesAgainst?.toString() || ""}</ListGroupItem>
-      </ListGroup>
-      {wallet === proposer && proposalState(state) !== "Завершено" && <ProposalManager proposalId={proposalId} />}
-    </>
+    <div className="m-2 p-2">
+      <p>Proposal Id: {proposalId}</p>
+      <p>Статус голосования: {viewState(state)}</p>
+      <p>Инициатор голосования: {proposal.proposer}</p>
+      <p>Тип голосования: {proposalType(proposal.typ)}</p>
+      <p>Механизм достижения кворума: {quorumType(Number(proposal.typ), proposal.simpleMost?.toString())}</p>
+
+      <p>Куда инвестировать: {proposal.target}</p>
+      <p>Сколько инвестировать: {proposal.value} ETHER</p>
+
+      <p>Изменить права доступа у пользователя: {proposal.changeHim?.toString()}</p>
+
+      <p>Меняется токен: {token(proposal.changeSystem?.toString())}</p>
+      <p>Новый делитель: {proposal.newDenominator?.toString()}</p>
+
+      <p>Время голосования: {Number(proposal.period) / 12} минут</p>
+      <p>Проголосовавшие: {proposal.voters?.toString()}</p>
+      <p>Голоса За: {proposal.votesFor}</p>
+      <p>Голоса Против: {proposal.votesAgainst}</p>
+    </div>
   );
 };
 

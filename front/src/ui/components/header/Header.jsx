@@ -1,62 +1,68 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Nav, Navbar } from "react-bootstrap";
 import { useContext, useEffect } from "react";
 import { Context } from "../../../core/context/Context.jsx";
-import { Balance } from "../balance/Balance.jsx";
+import { Button, Nav, Navbar } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { Balances } from "../balances/Balances.jsx";
 
 const Header = () => {
-  const { wallet, disconnectWallet } = useContext(Context);
+  const { connect, wallet, setWallet, viewUserInfo, viewMyBalances, disconnect } = useContext(Context);
   const nav = useNavigate();
 
   useEffect(() => {
-    if (!wallet) {
-      nav("/");
-    }
+    (async () => {
+      await viewUserInfo();
+      await viewMyBalances();
+    })();
   }, []);
 
-  const handleExit = () => {
-    disconnectWallet();
+  const handleClick = async (e) => {
+    e.preventDefault();
+    await connect();
+  };
+
+  const handleLogout = () => {
+    disconnect();
+    setWallet(null);
     nav("/");
   };
 
   return (
-    <>
-      <div
-        className="d-flex flex-column w-100 align-items-center justify-content-evenly"
-        style={{
-          height: "15vh",
-          backgroundColor: "rebeccapurple",
-        }}
-      >
-        <div className="d-flex flex-row justify-content-center w-100">
-          <Navbar>
-            <Nav>
-              <h1>
-                <Link to="/">Профессионалы 2026</Link>
-              </h1>
-            </Nav>
-            {wallet && (
-              <>
-                <Nav>
-                  <Link to="/proposals">Все предложения</Link>
-                </Nav>
-                <Nav>
-                  <Link to="/log">Журнал принятых решений</Link>
-                </Nav>
-              </>
-            )}
-          </Navbar>
-        </div>
+    <div style={{ minHeight: "7rem", backgroundColor: "rebeccapurple" }} className="d-flex flex-column justify-content-center align-items-center text-white">
+      <Navbar>
+        <Nav>
+          <Link to="/">
+            <h4>Профессионалы 2026</h4>
+          </Link>
+        </Nav>
         {wallet && (
-          <div className="d-flex flex-column justify-content-center align-content-center text-center w-100">
-            <Button variant="outline-dark" onClick={handleExit} className="d-flex justify-content-center align-self-center w-50">
-              Выйти
-            </Button>
-            <Balance />
-          </div>
+          <>
+            <Nav>
+              <Link to="/cabinet">Личный кабинет</Link>
+            </Nav>
+
+            <Nav>
+              <Link to="/proposals">Все предложения</Link>
+            </Nav>
+          </>
         )}
-      </div>
-    </>
+        <Nav>
+          <Link to="/success">Завершенные предложения</Link>
+        </Nav>
+      </Navbar>
+
+      {wallet ? (
+        <>
+          <Button onClick={handleLogout} variant="outline-primary" className="mb-2">
+            Выйти
+          </Button>
+          <p>{wallet}</p>
+        </>
+      ) : (
+        <>
+          <Button onClick={handleClick}>Авторизироваться через Metamask</Button>
+        </>
+      )}
+    </div>
   );
 };
 

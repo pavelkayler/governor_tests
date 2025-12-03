@@ -1784,6 +1784,11 @@
             "type": "bool"
           },
           {
+            "internalType": "uint256",
+            "name": "newDenominator",
+            "type": "uint256"
+          },
+          {
             "internalType": "enum MyGovernor.proposalType",
             "name": "typ",
             "type": "uint8"
@@ -1872,6 +1877,11 @@
             "internalType": "bool",
             "name": "changeSystem",
             "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newDenominator",
+            "type": "uint256"
           },
           {
             "internalType": "enum MyGovernor.proposalType",

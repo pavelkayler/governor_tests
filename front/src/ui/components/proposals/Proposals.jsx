@@ -1,26 +1,23 @@
-import { CreatePropose } from "./proposalCard/CreatePropose.jsx";
-import { ProposalCard } from "./proposalCard/ProposalCard.jsx";
 import { useContext, useEffect } from "react";
 import { Context } from "../../../core/context/Context.jsx";
+import { ProposalCard } from "./proposalCard/ProposalCard.jsx";
 import { useNavigate } from "react-router-dom";
 
 const Proposals = () => {
-  const { getAllProposalIds, proposals, wallet } = useContext(Context);
-  const navigate = useNavigate();
+  const { wallet, getAllProposalIds, proposalsIds } = useContext(Context);
+  const nav = useNavigate();
 
   useEffect(() => {
     (async () => {
+      if (!wallet) {
+        nav("/");
+        return;
+      }
       await getAllProposalIds();
     })();
-  }, [proposals]);
+  }, [getAllProposalIds, proposalsIds]);
 
-  return (
-    <>
-      <div className="d-flex flex-row flex-wrap justify-content-center">
-        {proposals.length > 0 && proposals.map((proposalId, index) => <ProposalCard key={index} proposalId={proposalId} />)}
-      </div>
-    </>
-  );
+  return <div>{proposalsIds.length > 0 && proposalsIds.toReversed().map((proposalId, index) => <ProposalCard key={index} proposalId={proposalId} />)}</div>;
 };
 
 export { Proposals };

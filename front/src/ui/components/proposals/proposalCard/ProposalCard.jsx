@@ -1,16 +1,19 @@
+import { Card, CardBody } from "react-bootstrap";
 import { ProposalInfo } from "./ProposalInfo.jsx";
 import { ProposalVoting } from "./ProposalVoting.jsx";
 import { ProposalManager } from "./ProposalManager.jsx";
-import { Card, CardBody } from "react-bootstrap";
 
 const ProposalCard = ({ proposalId }) => {
   return (
-    <Card className="d-flex flex-row flex-wrap align-items-center justify-content-center p-2 m-2">
-      <CardBody>
-        <ProposalInfo proposalId={proposalId} />
-        <ProposalVoting proposalId={proposalId} />
-      </CardBody>
-    </Card>
+    <div className="d-flex flex-column m-2 p-2">
+      <Card className="d-flex flex-column flex-wrap m-2 p-2">
+        <CardBody>
+          <ProposalInfo proposalId={proposalId} />
+          <ProposalVoting proposalId={proposalId} />
+          <ProposalManager proposalId={proposalId} />
+        </CardBody>
+      </Card>
+    </div>
   );
 };
 
